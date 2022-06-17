@@ -1,5 +1,6 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.qameta.allure.Allure;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -11,8 +12,10 @@ import java.util.concurrent.TimeUnit;
 public class SauceDemoTest {
     WebDriver driver;
 
-    @Test
-    public void TestSauceDemo() throws InterruptedException {
+
+
+    @BeforeEach
+    public void setUp() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--no-sandbox");
@@ -25,8 +28,9 @@ public class SauceDemoTest {
         driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
         driver.manage().window().maximize();
-
-
+    }
+    @Test
+    public void TestSauceDemo() throws InterruptedException {
         driver.navigate().to("https://www.saucedemo.com/");
         WebElement username = driver.findElement(By.xpath("//*[@id=\"user-name\"]"));
         username.sendKeys("standard_user");
@@ -44,6 +48,8 @@ public class SauceDemoTest {
         cart.click();
 
         Allure.addAttachment("Any text", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
+        Thread.sleep(2000);
+        driver.quit();
     }
 }
 
